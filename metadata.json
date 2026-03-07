@@ -1,0 +1,5 @@
+{
+  "name": "Lip Sync Avatar",
+  "description": "Real-time lip sync for 3D avatars using Web Audio API",
+  "requestFramePermissions": ["microphone"]
+}
