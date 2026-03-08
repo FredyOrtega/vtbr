@@ -31,34 +31,38 @@ export default function App() {
   const [videoUrl, setVideoUrl] = useState("");
   const [inputUrl, setInputUrl] = useState("");
 
-
-
   const loadVideo = () => {
     if (!inputUrl) return;
 
-    let videoId = "";
-
-    try {
-      if (inputUrl.includes("watch?v=")) {
-        const url = new URL(inputUrl);
-        videoId = url.searchParams.get("v") || "";
-      }
-      else if (inputUrl.includes("youtu.be/")) {
-        videoId = inputUrl.split("youtu.be/")[1].split("?")[0];
-      }
-      else if (inputUrl.includes("embed/")) {
-        videoId = inputUrl.split("embed/")[1].split("?")[0];
-      }
-    } catch (e) { }
+    // Regex que cubre: watch?v=, youtu.be, embed, y shorts
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = inputUrl.match(regex);
+    const videoId = match ? match[1] : null;
 
     if (!videoId) {
-      alert("Invalid YouTube URL");
+      alert("URL de YouTube no válida");
       return;
     }
 
+    // Importante: quitamos el mute=1 si quieres escuchar el video, 
+    // pero recuerda que muchos navegadores bloquean el autoplay con sonido.
     setVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0`);
   };
 
+
+  // Regex que cubre: watch?v=, youtu.be, embed, y shorts
+  const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = inputUrl.match(regex);
+  const videoId = match ? match[1] : null;
+
+  if (!videoId) {
+    alert("URL de YouTube no válida");
+    return;
+  }
+
+  // Importante: quitamos el mute=1 si quieres escuchar el video, 
+  // pero recuerda que muchos navegadores bloquean el autoplay con sonido.
+  setVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0`);
   return (
     <div
       className="w-full h-screen bg-black overflow-hidden relative"
