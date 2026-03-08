@@ -20,7 +20,7 @@ const BackgroundPlayer = memo(({
   console.log('DEBUG: BackgroundPlayer Rendering with URL:', videoUrl);
   const Player = ReactPlayer as any;
   return (
-    <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950 border border-white/5 pointer-events-none">
+    <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950 border border-white/5">
       <Player
         key={videoUrl}
         url={videoUrl}

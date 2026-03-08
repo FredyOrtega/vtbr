@@ -67,7 +67,7 @@ export function Experience({ analyser, headTransform }: ExperienceProps) {
         resolution={512}
         color="#000000"
       />
-      <color attach="background" args={['transparent']} />
+      <color attach="background" args={['#000000']} />
     </Canvas>
   );
 }
