@@ -6,7 +6,7 @@
 import React, { useState, useRef, useCallback, memo, useEffect } from 'react';
 import { Experience } from './components/Experience';
 import { Mic, MicOff, HelpCircle, X, Play, Pause, Youtube, Volume2, VolumeX } from 'lucide-react';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/youtube';
 
 // Memoized Player component to prevent re-renders on mouse move
 const BackgroundPlayer = memo(({
@@ -22,28 +22,12 @@ const BackgroundPlayer = memo(({
   return (
     <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-slate-950 border border-white/5">
       <Player
-        key={videoUrl}
         url={videoUrl}
-        playing={true}
-        loop
-        controls={false}
-        muted={true}
+        playing
+        muted
         width="100%"
         height="100%"
-        playsinline
-        config={{
-          youtube: {
-            playerVars: {
-              autoplay: 1,
-              controls: 0,
-              modestbranding: 1,
-              rel: 0
-            }
-          }
-        }}
-        onReady={onReady}
-        onStart={onStart}
-        onError={onError}
+        controls={false}
       />
     </div>
   );
