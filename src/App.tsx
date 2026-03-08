@@ -9,12 +9,12 @@ import { Mic, MicOff, HelpCircle, X, Play, Pause, Youtube, Volume2, VolumeX } fr
 import ReactPlayer from 'react-player';
 
 // Memoized Player component to prevent re-renders on mouse move
-const BackgroundPlayer = memo(({ 
-  videoUrl, 
-  isPlaying, 
-  isMuted, 
-  onReady, 
-  onStart, 
+const BackgroundPlayer = memo(({
+  videoUrl,
+  isPlaying,
+  isMuted,
+  onReady,
+  onStart,
   onError
 }: any) => {
   console.log('DEBUG: BackgroundPlayer Rendering with URL:', videoUrl);
@@ -26,7 +26,7 @@ const BackgroundPlayer = memo(({
         url={videoUrl}
         playing={isPlaying}
         loop={true}
-        light={true}
+        light={false}
         width="100%"
         height="100%"
         controls={false}
@@ -47,18 +47,12 @@ const BackgroundPlayer = memo(({
         onError={onError}
         config={{
           youtube: {
-            playerVars: { 
-              autoplay: 0,
+            playerVars: {
               modestbranding: 1,
-              rel: 0,
-              controls: 0,
-              showinfo: 0,
-              iv_load_policy: 3,
-              disablekb: 1,
-              fs: 0
+              rel: 0
             }
           }
-        } as any}
+        }}
       />
     </div>
   );
@@ -95,10 +89,10 @@ export default function App() {
 
       const analyserNode = audioCtx.createAnalyser();
       analyserNode.fftSize = 256;
-      
+
       const source = audioCtx.createMediaStreamSource(stream);
       source.connect(analyserNode);
-      
+
       setAnalyser(analyserNode);
       setIsAudioStarted(true);
     } catch (err) {
@@ -154,30 +148,30 @@ export default function App() {
 
       // Normalize URL to ensure compatibility
       let cleanUrl = inputUrl.trim();
-      
+
       if (cleanUrl.length < 3) {
         setPlayerError('Please enter a valid YouTube URL or Video ID.');
         return;
       }
-      
+
       // Handle various YouTube URL formats
       try {
         if (cleanUrl.includes('youtu.be/')) {
           const videoId = cleanUrl.split('youtu.be/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
         } else if (cleanUrl.includes('youtube.com/shorts/')) {
           const videoId = cleanUrl.split('youtube.com/shorts/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
         } else if (cleanUrl.includes('youtube.com/watch')) {
           const urlObj = new URL(cleanUrl);
           const videoId = urlObj.searchParams.get('v');
-          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
         } else if (cleanUrl.includes('youtube.com/embed/')) {
           const videoId = cleanUrl.split('youtube.com/embed/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
         } else if (!cleanUrl.includes('/') && (cleanUrl.length === 11 || cleanUrl.length === 12)) {
           // Assume it's a direct Video ID if it's 11 or 12 chars (standard YouTube ID length)
-          cleanUrl = `https://www.youtube.com/watch?v=${cleanUrl}`;
+
         }
       } catch (e) {
         console.error('URL parsing error', e);
@@ -206,13 +200,13 @@ export default function App() {
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     const x = (e.clientX / window.innerWidth) * 2 - 1;
     const y = -(e.clientY / window.innerHeight) * 2 + 1;
-    
+
     setHeadTransform(prev => ({
       ...prev,
-      rotation: { 
+      rotation: {
         x: y * 0.5, // Look up/down
         y: -x * 0.5, // Look left/right
-        z: 0 
+        z: 0
       },
       position: { x: x * 0.5, y: y * 0.5 }
     }));
@@ -221,7 +215,7 @@ export default function App() {
   const Player = ReactPlayer as any;
 
   return (
-    <div 
+    <div
       className={`w-full h-screen relative overflow-hidden flex items-center justify-center ${videoUrl ? 'bg-black' : 'bg-slate-900'}`}
       onMouseMove={handleMouseMove}
     >
@@ -236,7 +230,7 @@ export default function App() {
             onStart={handlePlayerStart}
             onError={handlePlayerError}
           />
-          
+
           {/* Loading / Play Overlay */}
           {(playerError || isLoading) && (
             <div className={`absolute inset-0 flex items-center justify-center z-10 pointer-events-auto transition-opacity duration-500 ${isLoading || playerError ? 'bg-black/60 backdrop-blur-sm' : 'bg-transparent'}`}>
@@ -252,7 +246,7 @@ export default function App() {
                     </p>
                   </div>
                   <div className="flex flex-col gap-3 w-full">
-                    <button 
+                    <button
                       onClick={() => {
                         setVideoUrl('');
                         setPlayerError(null);
@@ -274,7 +268,7 @@ export default function App() {
                     <span className="text-xs font-medium tracking-widest uppercase">Loading Background...</span>
                   </div>
                   <div className="flex flex-col gap-2 items-center mt-4">
-                    <button 
+                    <button
                       onClick={() => {
                         setIsLoading(false);
                         setIsReady(true);
@@ -284,7 +278,7 @@ export default function App() {
                     >
                       Force Start Player
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         setVideoUrl('');
                         setPlayerError(null);
@@ -299,7 +293,7 @@ export default function App() {
                   </p>
                 </div>
               ) : isReady && !isPlaying ? (
-                <button 
+                <button
                   onClick={() => setIsPlaying(true)}
                   className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-6 py-3 rounded-full font-bold text-sm shadow-2xl transform transition-all hover:scale-105 flex items-center gap-2 border border-white/20"
                 >
@@ -328,15 +322,15 @@ export default function App() {
           </div>
 
           <div className="w-full flex gap-3">
-            <input 
-              type="text" 
-              placeholder="Paste YouTube URL here..." 
+            <input
+              type="text"
+              placeholder="Paste YouTube URL here..."
               className="flex-1 bg-slate-900/50 border border-white/10 rounded-2xl px-6 py-4 text-white text-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-all"
               value={inputUrl}
               onChange={(e) => setInputUrl(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleLoadVideo()}
             />
-            <button 
+            <button
               onClick={handleLoadVideo}
               className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-red-600/20"
             >
@@ -361,10 +355,10 @@ export default function App() {
       <div className="absolute bottom-4 right-4 w-64 h-64 rounded-3xl overflow-hidden shadow-2xl transition-all hover:scale-105 z-50 border border-white/10">
         {/* Removed backdrop-blur to prevent rendering artifacts over iframe */}
         <div className="w-full h-full bg-black/5">
-           <Experience analyser={analyser} headTransform={headTransform} />
+          <Experience analyser={analyser} headTransform={headTransform} />
         </div>
       </div>
-      
+
       {/* Controls - Bottom Center */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex flex-col items-center gap-4">
         <div className="flex gap-4">
@@ -372,8 +366,8 @@ export default function App() {
             onClick={isAudioStarted ? stopAudio : startAudio}
             className={`
               flex items-center justify-center gap-2 px-6 py-3 rounded-full font-medium transition-all
-              ${isAudioStarted 
-                ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/30' 
+              ${isAudioStarted
+                ? 'bg-red-500 hover:bg-red-600 text-white shadow-red-500/30'
                 : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/30'
               } shadow-lg
             `}
@@ -412,7 +406,7 @@ export default function App() {
             </>
           )}
         </div>
-        
+
         <div className="flex gap-2">
           {isAudioStarted && (
             <div className="flex items-center gap-2 px-4 py-2 bg-black/80 text-white rounded-full text-xs font-mono border border-white/10">
