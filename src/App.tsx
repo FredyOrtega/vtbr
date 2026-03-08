@@ -26,7 +26,6 @@ const BackgroundPlayer = memo(({
         url={videoUrl}
         playing={isPlaying}
         loop={true}
-        light={false}
         width="100%"
         height="100%"
         controls={false}
@@ -158,17 +157,17 @@ export default function App() {
       try {
         if (cleanUrl.includes('youtu.be/')) {
           const videoId = cleanUrl.split('youtu.be/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
         } else if (cleanUrl.includes('youtube.com/shorts/')) {
           const videoId = cleanUrl.split('youtube.com/shorts/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
         } else if (cleanUrl.includes('youtube.com/watch')) {
           const urlObj = new URL(cleanUrl);
           const videoId = urlObj.searchParams.get('v');
-          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
         } else if (cleanUrl.includes('youtube.com/embed/')) {
           const videoId = cleanUrl.split('youtube.com/embed/')[1]?.split(/[?#]/)[0];
-          if (videoId) cleanUrl = `https://www.youtube.com/embed/${videoId}`;
+          if (videoId) cleanUrl = `https://www.youtube.com/watch?v=${videoId}`;
         } else if (!cleanUrl.includes('/') && (cleanUrl.length === 11 || cleanUrl.length === 12)) {
           // Assume it's a direct Video ID if it's 11 or 12 chars (standard YouTube ID length)
 
