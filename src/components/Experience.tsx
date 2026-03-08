@@ -38,9 +38,14 @@ interface ExperienceProps {
 
 export function Experience({ analyser, headTransform }: ExperienceProps) {
   return (
-    <Canvas camera={{ position: [0, 1, 5], fov: 45 }} shadows gl={{ alpha: true, antialias: true }}>
+    <Canvas
+      camera={{ position: [0, 1, 5], fov: 45 }}
+      shadows
+      gl={{ alpha: true, antialias: true }}
+      style={{ background: 'transparent', pointerEvents: 'none' }}
+    >
       {/* Transparent background for overlay effect */}
-      
+
       <ErrorBoundary>
         <Suspense fallback={null}>
           <group position={[0, -1, 0]}>
@@ -54,14 +59,15 @@ export function Experience({ analyser, headTransform }: ExperienceProps) {
         </Suspense>
       </ErrorBoundary>
 
-      <ContactShadows 
-        opacity={0.15} 
-        scale={15} 
-        blur={5} 
-        far={4} 
-        resolution={512} 
-        color="#000000" 
+      <ContactShadows
+        opacity={0.15}
+        scale={15}
+        blur={5}
+        far={4}
+        resolution={512}
+        color="#000000"
       />
+      <color attach="background" args={['transparent']} />
     </Canvas>
   );
 }
