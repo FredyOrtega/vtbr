@@ -2,31 +2,68 @@ import React, { useState } from "react";
 import { Experience } from "./components/Experience";
 
 export default function App() {
+  const [headTransform, setHeadTransform] = useState({
+    rotation: { x: 0, y: 0, z: 0 },
+    position: { x: 0, y: 0 },
+    expressions: { browLeft: 0, browRight: 0 }
+  });
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const x = (e.clientX / window.innerWidth) * 2 - 1;
+    const y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+    setHeadTransform({
+      rotation: {
+        x: y * 0.5,
+        y: -x * 0.5,
+        z: 0
+      },
+      position: {
+        x: x * 0.5,
+        y: y * 0.5
+      },
+      expressions: {
+        browLeft: 0,
+        browRight: 0
+      }
+    });
+  };
   const [videoUrl, setVideoUrl] = useState("");
   const [inputUrl, setInputUrl] = useState("");
+
+
 
   const loadVideo = () => {
     if (!inputUrl) return;
 
-    let id = inputUrl;
+    let videoId = "";
 
     try {
       if (inputUrl.includes("watch?v=")) {
-        id = new URL(inputUrl).searchParams.get("v") || "";
+        const url = new URL(inputUrl);
+        videoId = url.searchParams.get("v") || "";
       }
-
-      if (inputUrl.includes("youtu.be/")) {
-        id = inputUrl.split("youtu.be/")[1];
+      else if (inputUrl.includes("youtu.be/")) {
+        videoId = inputUrl.split("youtu.be/")[1].split("?")[0];
       }
-
+      else if (inputUrl.includes("embed/")) {
+        videoId = inputUrl.split("embed/")[1].split("?")[0];
+      }
     } catch (e) { }
 
-    setVideoUrl(`https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0`);
+    if (!videoId) {
+      alert("Invalid YouTube URL");
+      return;
+    }
+
+    setVideoUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0`);
   };
 
   return (
-    <div className="w-full h-screen bg-black overflow-hidden relative">
+    <div
+      className="w-full h-screen bg-black overflow-hidden relative"
+      onMouseMove={handleMouseMove}
+    >
 
       {/* VIDEO BACKGROUND */}
       {videoUrl && (
@@ -79,11 +116,7 @@ export default function App() {
       >
         <Experience
           analyser={null}
-          headTransform={{
-            rotation: { x: 0, y: 0, z: 0 },
-            position: { x: 0, y: 0 },
-            expressions: { browLeft: 0, browRight: 0 }
-          }}
+          headTransform={headTransform}
         />
       </div>
 
