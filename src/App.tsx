@@ -189,10 +189,9 @@ export default function App() {
       // Safety timeout: if onReady doesn't fire in 8 seconds, show a potential restriction message
       timeoutRef.current = setTimeout(() => {
         if (!isReadyRef.current) {
-          setIsLoading(false);
-          setPlayerError('This video is taking too long to load. It might be private, restricted, or embedding might be disabled by the owner.');
+          console.warn("Player slow to load...");
         }
-      }, 8000);
+      }, 20000);
     }
   };
 
