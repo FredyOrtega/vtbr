@@ -11,19 +11,14 @@ export function BackgroundPlayer({ url }: Props) {
 
     return (
         <iframe
-            src={embed + "?autoplay=1&mute=1&controls=0&loop=1"}
-            title="YouTube background"
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1"
             style={{
                 position: "fixed",
                 top: 0,
                 left: 0,
                 width: "100%",
                 height: "100%",
-                zIndex: 0,
-                pointerEvents: "none"
+                zIndex: 0
             }}
         />
     );
